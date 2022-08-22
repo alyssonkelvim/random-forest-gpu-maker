@@ -1,0 +1,16 @@
+1 - Criar o gerador da arvore com if.
+2 - Comparar as versões GPU e CPU.
+3 - Métricas:
+    -> Tamamho do código.
+    -> Tempo de execução.
+    -> Gops/s.
+    -> amostras/s.
+
+    Para GPU em específico:
+    -> Número de registradores.
+    -> Avaliação do Assembler PTX.
+
+4 - Script para ter o pipeline do skylearn com gerador de código e comparação de desempenho.
+
+1 - Gerar as equações com os Cs no formato do ABC.
+2 - minimizar no abc e comparar minimizada.
