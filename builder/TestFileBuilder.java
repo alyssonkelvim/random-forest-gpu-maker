@@ -9,7 +9,7 @@ import model.TreeStructure;
 public class TestFileBuilder {
     public static void execute(List<TreeStructure> treeStructures){
         FileBuilder.execute(generateFunctions(), "out/functions.cu");
-        FileBuilder.execute(code += generateMainFunction(treeStructures.get(0).getTree().getFeatureQuantity()), "out/main.cu");
+        FileBuilder.execute(generateMainFunction(treeStructures.get(0).getTree().getFeatureQuantity()), "out/main.cu");
         
     }
 
