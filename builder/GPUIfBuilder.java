@@ -17,13 +17,13 @@ public class GPUIfBuilder {
     }
 
     private static String generateIfTrees(List<TreeStructure> treeStructures) {
-        var code = "\tif (i < N) {\n";
+        var code = "\n\tif (i < N) {\n";
 
         code += treeStructures.stream()
             .map(ts -> generateIfTree(ts.getTree().getRoot(), 2))
             .collect(Collectors.joining("\n"));
 
-        code += "\t}\n";
+        code += "\t}\n}";
         return code;
     }
 
