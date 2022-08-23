@@ -8,10 +8,9 @@ import model.TreeStructure;
 
 public class TestFileBuilder {
     public static void execute(List<TreeStructure> treeStructures){
-        String code = new String();
-        code += generateFunctions();
-        code += generateMainFunction(treeStructures.get(0).getTree().getFeatureQuantity());
-        FileBuilder.execute(code, "out/test.cu");
+        FileBuilder.execute(generateFunctions(), "out/functions.cu");
+        FileBuilder.execute(code += generateMainFunction(treeStructures.get(0).getTree().getFeatureQuantity()), "out/main.cu");
+        
     }
 
     private static String generateMainFunction(int featureQuantity) {
