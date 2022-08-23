@@ -140,7 +140,7 @@ public class GPUBuilder {
             map.put("Q"+cont, "p"+cont);
             cont++;
         }
-        comparisson += "\t\tP[i] = "+map.get(queue.remove());
+        comparisson += "\t\tP[i] = "+map.get(queue.remove()+";");
 
         return comparisson;
     }
