@@ -9,6 +9,7 @@ import builder.GPUBuilder;
 import builder.GPUIfBuilder;
 import builder.MemoriesBuilder;
 import builder.RandomForestBuilder;
+import builder.TestFileBuilder;
 import builder.TreeBuilder;
 import model.Memory;
 import model.Tree;
@@ -28,6 +29,7 @@ public class RandomForestVerilogMaker {
         var treeStructures = decodeFiles(files);
         GPUIfBuilder.execute(treeStructures);
         GPUBuilder.execute(treeStructures);
+        TestFileBuilder.execute(treeStructures);
     }
 
     private static List<TreeStructure> decodeFiles(Stream<File> files) {
