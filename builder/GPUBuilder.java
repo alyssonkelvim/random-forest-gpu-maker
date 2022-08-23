@@ -134,8 +134,8 @@ public class GPUBuilder {
             String comp2 = (String) queue.removeFirst();
             String value1 = (String) map.get(comp1);
             String value2 = (String) map.get(comp2);
-            comparisson += String.format("\t\tp%d = (%s > %s)?%s:%s;\n", cont, comp1, comp2, value1, value2);
-            comparisson += String.format("\t\tQ%d = (%s > %s)?%s:%s;\n", cont, comp1, comp2, comp1, comp2);
+            comparisson += String.format("\t\tint p%d = (%s > %s)?%s:%s;\n", cont, comp1, comp2, value1, value2);
+            comparisson += String.format("\t\tint Q%d = (%s > %s)?%s:%s;\n", cont, comp1, comp2, comp1, comp2);
             queue.addLast("Q"+cont);
             map.put("Q"+cont, "p"+cont);
             cont++;
