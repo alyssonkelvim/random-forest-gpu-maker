@@ -54,12 +54,10 @@ public class GPUBuilder {
         
         var classes = "";
         for (int i = 0; i < featureQuantity; i++) {
-            System.out.println("Gerando Memórias: "+ (i+1) + "/" + featureQuantity + " - Memorias:" + memories.size());
             classes += "\n\t\tClass["+i+"] = ";
             var mCount = 0;
             ArrayList<Memory> removeMemory = new ArrayList<>();
             for(Memory m : memories){
-                System.out.println("Gerando Memórias: "+ (i+1) + "/" + featureQuantity + " - Memorias:" + (mCount + 1) +"/"+ memories.size());
                 if(m.getClassId() == i){
                     classes +="(" + m.getDecisions()
                         .keySet()

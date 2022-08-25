@@ -27,8 +27,11 @@ public class RandomForestVerilogMaker {
         //generateTreeFiles();
         var files = readTreeFiles();
         var treeStructures = decodeFiles(files);
+        System.out.println("Gerando GPU com if");
         GPUIfBuilder.execute(treeStructures);
+        System.out.println("Gerando GPU com equações");
         GPUBuilder.execute(treeStructures);
+        System.out.println("Gerando Arquivos de Teste");
         TestFileBuilder.execute(treeStructures);
     }
 
