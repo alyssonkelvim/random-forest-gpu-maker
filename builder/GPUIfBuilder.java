@@ -8,9 +8,9 @@ import model.Node;
 import model.TreeStructure;
 
 public class GPUIfBuilder {
-    public static void execute(List<TreeStructure> treeStructures){
+    public static void execute(List<TreeStructure> treeStructures, int featureQuantity){
         String sourceCode = new String();
-        sourceCode += generateFunctionSignature(treeStructures.get(0).getTree().getFeatureQuantity());
+        sourceCode += generateFunctionSignature(featureQuantity);
         sourceCode += generateClassInitialization(treeStructures.get(0).getTree().getClassQuantity());
         sourceCode += generateIfTrees(treeStructures);
         FileBuilder.execute(sourceCode, "out/rf_with_if.cu");
