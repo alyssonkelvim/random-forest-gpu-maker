@@ -38,7 +38,7 @@ public class GPUBuilder {
             }
         }
         
-        code += generateBooleanVariablesDeclarations(featureQuantity);
+        code += generateBooleanVariablesDeclarations(decisions.size());
         code += generateBooleanVariablesInitialization(decisions);
         code += generateClassAtribuition(treeStructures, decisions, treeStructures.get(0).getTree().getClassQuantity());
         code += generateComparissons(treeStructures.get(0).getTree().getClassQuantity());
