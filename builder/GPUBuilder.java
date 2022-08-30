@@ -15,16 +15,16 @@ import model.Node;
 import model.TreeStructure;
 
 public class GPUBuilder {
-    public static void execute(List<TreeStructure> treeStructures){
+    public static void execute(List<TreeStructure> treeStructures, int featureQuantity){
         String sourceCode = new String();
-        sourceCode += generateFunctionSignature(treeStructures.get(0).getTree().getFeatureQuantity());
+        sourceCode += generateFunctionSignature(featureQuantity);
         sourceCode += generateClassInitialization(treeStructures.get(0).getTree().getClassQuantity());
-        sourceCode += generateEqTrees(treeStructures);
+        sourceCode += generateEqTrees(treeStructures, featureQuantity);
         sourceCode +="}";
         FileBuilder.execute(sourceCode, "out/rf_with_eq.cu");
     }
 
-    private static String generateEqTrees(List<TreeStructure> treeStructures) {
+    private static String generateEqTrees(List<TreeStructure> treeStructures, int featureQuantity) {
         var code = "\n\n\tif (i < N) {\n";
         HashMap<String, String> decisions = new HashMap<String, String>();
         int index = 0;
@@ -38,7 +38,7 @@ public class GPUBuilder {
             }
         }
         
-        code += generateBooleanVariablesDeclarations(decisions.size());
+        code += generateBooleanVariablesDeclarations(featureQuantity);
         code += generateBooleanVariablesInitialization(decisions);
         code += generateClassAtribuition(treeStructures, decisions, treeStructures.get(0).getTree().getClassQuantity());
         code += generateComparissons(treeStructures.get(0).getTree().getClassQuantity());

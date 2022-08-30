@@ -1,7 +1,9 @@
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -22,17 +24,25 @@ public class RandomForestVerilogMaker {
     public static final String VERILOG_FILE_PATH = "out/verilog%d.v";
     public static final String BLIF_FILE_PATH = "out/blif/blif%d.v";
     public static final String ABC_FILE_PATH = "extension/abc";
+
+    public static int featureQuantity;
     
     public static void main(String[] args) throws Exception {
         //generateTreeFiles();
+        loadConfig();
         var files = readTreeFiles();
         var treeStructures = decodeFiles(files);
         System.out.println("Gerando GPU com if");
         GPUIfBuilder.execute(treeStructures);
         System.out.println("Gerando GPU com equações");
-        GPUBuilder.execute(treeStructures);
+        GPUBuilder.execute(treeStructures, featureQuantity);
         System.out.println("Gerando Arquivos de Teste");
         TestFileBuilder.execute(treeStructures);
+    }
+
+    private static void loadConfig() throws FileNotFoundException {
+        Scanner ler = new Scanner(new File("in/config.data"));
+        featureQuantity = Integer.parseInt(ler.nextLine()) + 1;
     }
 
     private static List<TreeStructure> decodeFiles(Stream<File> files) {
