@@ -37,7 +37,7 @@ public class RandomForestVerilogMaker {
         System.out.println("Gerando GPU com equações");
         GPUBuilder.execute(treeStructures, featureQuantity);
         System.out.println("Gerando Arquivos de Teste");
-        TestFileBuilder.execute(treeStructures);
+        TestFileBuilder.execute(treeStructures, featureQuantity);
     }
 
     private static void loadConfig() throws FileNotFoundException {
