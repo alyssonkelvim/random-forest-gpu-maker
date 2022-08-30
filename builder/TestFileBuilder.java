@@ -7,9 +7,9 @@ import java.util.stream.IntStream;
 import model.TreeStructure;
 
 public class TestFileBuilder {
-    public static void execute(List<TreeStructure> treeStructures){
+    public static void execute(List<TreeStructure> treeStructures, int featureQuantity){
         FileBuilder.execute(generateFunctions(), "out/functions.cu");
-        FileBuilder.execute(generateMainFunction(treeStructures.get(0).getTree().getFeatureQuantity()), "out/main.cu");
+        FileBuilder.execute(generateMainFunction(featureQuantity), "out/main.cu");
         
     }
 
