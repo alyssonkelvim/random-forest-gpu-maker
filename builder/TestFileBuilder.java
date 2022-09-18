@@ -48,9 +48,6 @@ public class TestFileBuilder {
         "    int * d_P;\n" +
         "    %_MALLOC_GLOBAL_MEMORY_%\n" +
         "    CHECK(cudaMalloc((int ** ) & d_P, nBytes));\n\n" +
-        "    for(int i = 0; i < nElem; i++){\n" +
-        "        writeOutFile(d_P[i]);\n" +
-        "    }\n" +
         "    closeOutFile();\n" +
         "\n" +
         "    // transfer data from host to device\n" +
@@ -91,6 +88,9 @@ public class TestFileBuilder {
         "    CHECK(cudaMemcpy(h_P, d_P, nBytes, cudaMemcpyDeviceToHost));\n" +
         "    printf(\"\\n \");\n" +
         "\n" +
+        "    for(int i = 0; i < nElem; i++){\n" +
+        "        writeOutFile(d_P[i]);\n" +
+        "    }\n" +
         "    // free host memory\n" +
         "    %_FREE_HOST_MEMORY_%\n" +
         "    free(hostRef);\n" +
@@ -209,7 +209,8 @@ public class TestFileBuilder {
         "                ip[i] = atof(line);        \n" +
         "                i++;\n" +
         "            }\n" +
-        "            line = \"00\";\n" +
+        "            for(int i = 0; i < 50; i++)\n" +
+        "              line[i] = ' ';\n" +
         "            j = 0;\n" +
         "            readIndex++;\n" +
         "        }else{\n" +
@@ -223,6 +224,9 @@ public class TestFileBuilder {
         "        c = fgetc(inFile);\n" +
         "    }\n" +
         "    fclose(inFile);\n" +
+        "}\n" + 
+        "void writeOutFile(int value){\n" + 
+        "    fprintf(outFile, \"%d\\\n\", value);\n" + 
         "}";
         }
 }
