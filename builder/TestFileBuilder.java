@@ -51,7 +51,7 @@ public class TestFileBuilder {
         "    %_MALLOC_GLOBAL_MEMORY_%\n" +
         "    CHECK(cudaMalloc((int ** ) & d_P, nBytes));\n\n" +
         "    for(int i = 0; i < nElem; i++){\n" +
-        "        writeOutFile(d_p[i]);\n" +
+        "        writeOutFile(d_P[i]);\n" +
         "    }\n" +
         "    closeOutFile();\n" +
         "\n" +
@@ -114,7 +114,7 @@ public class TestFileBuilder {
 
         code = code.replace("%_INICITALIZE_FEATURES_%", 
             IntStream.range(0, featureQuantity)
-                .mapToObj( i -> "\treadInFile(h_"+i+", nElem);")
+                .mapToObj( i -> "\treadInFile(h_"+i+");")
                 .collect(Collectors.joining("\n"))
         );
 
