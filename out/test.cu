@@ -137,10 +137,6 @@ int main(int argc, char ** argv) {
     CHECK(cudaMalloc((float ** ) & d_10, nBytes));
     CHECK(cudaMalloc((int ** ) & d_P, nBytes));
 
-    for(int i = 0; i < nElem; i++){
-        writeOutFile(d_p[i]);
-    }
-    closeOutFile();
 
     // transfer data from host to device
         CHECK(cudaMemcpy(d_0, h_0, nBytes, cudaMemcpyHostToDevice));

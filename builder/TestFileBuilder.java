@@ -15,7 +15,6 @@ public class TestFileBuilder {
 
     private static String generateMainFunction(int featureQuantity) {
         String code =  "int main(int argc, char ** argv) {\n" +
-        "openOutFile();"+
         "     \n" +
         "    float elapsed_time;\n" +
         "    // set up device\n" +
@@ -48,7 +47,6 @@ public class TestFileBuilder {
         "    int * d_P;\n" +
         "    %_MALLOC_GLOBAL_MEMORY_%\n" +
         "    CHECK(cudaMalloc((int ** ) & d_P, nBytes));\n\n" +
-        "    closeOutFile();\n" +
         "\n" +
         "    // transfer data from host to device\n" +
         "    %_TRANSFER_DATA_TO_DEVICE_%" +
@@ -88,8 +86,9 @@ public class TestFileBuilder {
         "    CHECK(cudaMemcpy(h_P, d_P, nBytes, cudaMemcpyDeviceToHost));\n" +
         "    printf(\"\\n \");\n" +
         "\n" +
+        "    cudaDeviceSynchronize();\n" +
         "    for(int i = 0; i < nElem; i++){\n" +
-        "        writeOutFile(d_P[i]);\n" +
+        "        writeOutFile(h_P[i]);\n" +
         "    }\n" +
         "    // free host memory\n" +
         "    %_FREE_HOST_MEMORY_%\n" +
@@ -177,30 +176,11 @@ public class TestFileBuilder {
         "FILE *inFile;\n" +
         "FILE *outFile;\n" +
         "\n" +
-        "void openInFile(){\n" +
-        "    inFile = fopen(\"in/dataset.csv\",\"r\");\n" +
-        "    if (inFile == NULL){\n" +
-        "        printf(\"Erro ao tentar abrir o arquivo!\");\n" +
-        "    }\n" +
-        "}\n" +
-        "\n" +
-        "void closeInFile(){\n" +
-        "    fclose(inFile);\n" +
-        "}\n" +
-        "\n" +
-        "void openOutFile(){\n" +
-        "    outFile = fopen(\"out/out_rf_with_if.csv\",\"a\");\n" +
-        "}\n" +
-        "\n" +
-        "void closeOutFile(){\n" +
-        "    fclose(outFile);\n" +
-        "}\n" +
-        "\n" +
         "void readInFile(float *ip, int index){ \n" +
         "    char c;\n" +
         "    int i = 0, j = 0, readIndex = 0;\n" +
         "    char line[50];\n" +
-        "    inFile = fopen(\"out/out_rf_with_if.csv\",\"a\");\n" +
+        "    inFile = fopen(\"in/dataset.csv\",\"a\");\n" +
         "    printf(\"Lendo e exibindo os dados do arquivo \\n\\n\");\n" +
         "    c = fgetc(inFile);\n" +
         "    while (c != EOF){\n" +
@@ -226,7 +206,9 @@ public class TestFileBuilder {
         "    fclose(inFile);\n" +
         "}\n" + 
         "void writeOutFile(int value){\n" + 
+        "    outFile = fopen(\"out/out_rf_with_if.csv\",\"a\");\n" +
         "    fprintf(outFile, \"%d\\\n\", value);\n" + 
+        "    fclose(outFile);\n" +
         "}";
         }
 }
