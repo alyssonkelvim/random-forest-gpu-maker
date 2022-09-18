@@ -207,7 +207,7 @@ public class TestFileBuilder {
         "}\n" + 
         "void writeOutFile(int value){\n" + 
         "    outFile = fopen(\"out/out_rf_with_if.csv\",\"a\");\n" +
-        "    fprintf(outFile, \"%d\\\n\", value);\n" + 
+        "    fprintf(outFile, \"%d\\n\", value);\n" + 
         "    fclose(outFile);\n" +
         "}";
         }
