@@ -71,6 +71,10 @@ public class TestFileBuilder {
         "    CHECK(cudaMemcpy(h_P, d_P, nBytes, cudaMemcpyDeviceToHost));\n" +
         "    CHECK(cudaEventCreate( & start));\n" +
         "    CHECK(cudaEventCreate( & stop));\n" +
+        "    cudaDeviceSynchronize();\n" +
+        "    for(int i = 0; i < nElem; i++){\n" +
+        "        writeOutFile(h_P[i]);\n" +
+        "    }\n" +
         "    // record start event\n" +
         "    CHECK(cudaEventRecord(start, 0));\n" +
         "    RF_with_EQ << < grid, block >>> (%_VARIABLES_%, d_P, nElem);\n" +
@@ -86,10 +90,6 @@ public class TestFileBuilder {
         "    CHECK(cudaMemcpy(h_P, d_P, nBytes, cudaMemcpyDeviceToHost));\n" +
         "    printf(\"\\n \");\n" +
         "\n" +
-        "    cudaDeviceSynchronize();\n" +
-        "    for(int i = 0; i < nElem; i++){\n" +
-        "        writeOutFile(h_P[i]);\n" +
-        "    }\n" +
         "    // free host memory\n" +
         "    %_FREE_HOST_MEMORY_%\n" +
         "    free(hostRef);\n" +
