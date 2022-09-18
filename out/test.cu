@@ -37,31 +37,33 @@ void closeInFile(){
     fclose(inFile);
 }
 
-void openOutFile(){
-    outFile = fopen("out/out_rf_with_if.csv","a");
-}
-
-void closeOutFile(){
-    fclose(outFile);
-}
-
-void readInFile(float *ip){ 
+void readInFile(float *ip, int index){ 
     char c;
-    int i = 0, j = 0;
-    char line[20];
-    
+    int i = 0, j = 0, readIndex = 0;
+    char line[50];
+    outFile = fopen("out/out_rf_with_if.csv","a");
     printf("Lendo e exibindo os dados do arquivo \n\n");
     c = fgetc(inFile);
-    while (c != EOF ||  c != '\n'){
-        if(c == ','){
-            ip[i] = atof(line);    
+    while (c != EOF){
+        if(c == ',' || c == '\n'){
+            if(index == readIndex){
+                ip[i] = atof(line);        
+                i++;
+            }
+            line = "00";
+            j = 0;
+            readIndex++;
         }else{
             line[j] = c;
             j++;
         }
         
+        if(c == '\n'){
+            readIndex = 0;
+        }
         c = fgetc(inFile);
     }
+    fclose(outFile);
 }
 
 void writeOutFile(int value){

@@ -15,7 +15,6 @@ public class TestFileBuilder {
 
     private static String generateMainFunction(int featureQuantity) {
         String code =  "int main(int argc, char ** argv) {\n" +
-        "openInFile();"+
         "openOutFile();"+
         "     \n" +
         "    float elapsed_time;\n" +
@@ -40,7 +39,6 @@ public class TestFileBuilder {
         "    h_P = (int * ) malloc(nBytes);\n" +
         "\n" +
         "    %_INICITALIZE_FEATURES_%\n" +
-        "    closeInFile();\n" +
         "\n" +
         "    memset(hostRef, 0, nBytes);\n" +
         "    memset(h_P, 0, nBytes);\n" +
@@ -114,7 +112,7 @@ public class TestFileBuilder {
 
         code = code.replace("%_INICITALIZE_FEATURES_%", 
             IntStream.range(0, featureQuantity)
-                .mapToObj( i -> "\treadInFile(h_"+i+");")
+                .mapToObj( i -> "\treadInFile(h_"+i+", "+i+");")
                 .collect(Collectors.joining("\n"))
         );
 
@@ -198,27 +196,33 @@ public class TestFileBuilder {
         "    fclose(outFile);\n" +
         "}\n" +
         "\n" +
-        "void readInFile(float *ip){ \n" +
+        "void readInFile(float *ip, int index){ \n" +
         "    char c;\n" +
-        "    int i = 0, j = 0;\n" +
-        "    char line[20];\n" +
-        "    \n" +
+        "    int i = 0, j = 0, readIndex = 0;\n" +
+        "    char line[50];\n" +
+        "    inFile = fopen(\"out/out_rf_with_if.csv\",\"a\");\n" +
         "    printf(\"Lendo e exibindo os dados do arquivo \\n\\n\");\n" +
         "    c = fgetc(inFile);\n" +
-        "    while (c != EOF ||  c != '\\n'){\n" +
-        "        if(c == ','){\n" +
-        "            ip[i] = atof(line);    \n" +
+        "    while (c != EOF){\n" +
+        "        if(c == ',' || c == '\\n'){\n" +
+        "            if(index == readIndex){\n" +
+        "                ip[i] = atof(line);        \n" +
+        "                i++;\n" +
+        "            }\n" +
+        "            line = \"00\";\n" +
+        "            j = 0;\n" +
+        "            readIndex++;\n" +
         "        }else{\n" +
         "            line[j] = c;\n" +
         "            j++;\n" +
         "        }\n" +
         "        \n" +
+        "        if(c == '\\n'){\n" +
+        "            readIndex = 0;\n" +
+        "        }\n" +
         "        c = fgetc(inFile);\n" +
         "    }\n" +
-        "}\n" +
-        "\n" +
-        "void writeOutFile(int value){\n" +
-        "    fprintf(outFile, \"%d\\n\", value);\n" +
+        "    fclose(inFile);\n" +
         "}";
-    }
+        }
 }
