@@ -25,7 +25,7 @@ public class TestFileBuilder {
         "    CHECK(cudaSetDevice(dev));\n" +
         "\n" +
         "    // set up data size of vectors\n" +
-        "    int nElem = 1 << 25;\n" +
+        "    int nElem = 43024;\n" +
         "    printf(\"Vector Size %d\\n\", nElem);\n" +
         "\n" +
         "    // malloc host memory\n" +
