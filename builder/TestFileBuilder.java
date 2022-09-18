@@ -180,8 +180,7 @@ public class TestFileBuilder {
         "    char c;\n" +
         "    int i = 0, j = 0, readIndex = 0;\n" +
         "    char line[50];\n" +
-        "    inFile = fopen(\"in/dataset.csv\",\"a\");\n" +
-        "    printf(\"Lendo e exibindo os dados do arquivo \\n\\n\");\n" +
+        "    inFile = fopen(\"in/dataset.csv\",\"r\");\n" +
         "    c = fgetc(inFile);\n" +
         "    while (c != EOF){\n" +
         "        if(c == ',' || c == '\\n'){\n" +
