@@ -1,5 +1,7 @@
 package builder;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -13,6 +15,7 @@ public class GPUIfBuilder {
         sourceCode += generateFunctionSignature(featureQuantity);
         sourceCode += generateClassInitialization(treeStructures.get(0).getTree().getClassQuantity());
         sourceCode += generateIfTrees(treeStructures);
+        
         FileBuilder.execute(sourceCode, "out/rf_with_if.cu");
     }
 
@@ -22,6 +25,7 @@ public class GPUIfBuilder {
         code += treeStructures.stream()
             .map(ts -> generateIfTree(ts.getTree().getRoot(), 2))
             .collect(Collectors.joining("\n"));
+        code += generateComparissons(treeStructures.get(0).getTree().getClassQuantity());
 
         code += "\t}\n}";
         return code;
@@ -80,5 +84,31 @@ public class GPUIfBuilder {
             .collect(Collectors.joining(", "));
         String code = "__global__ void RF_with_IF("+features+", int *P, const int N)\n{";
         return code;
+    }
+
+    public static String generateComparissons(int classQuantity){
+        LinkedList queue = new LinkedList<String>();
+        HashMap map = new HashMap<String, String>();
+        for (int i = 0; i < classQuantity; i++) {
+            var key = "Class["+i+"]";
+            queue.addLast(key);
+            map.put(key, i+"");
+        }
+        String comparisson = "";
+        int cont = 0;
+        while(queue.size() > 1){
+            String comp1 = (String) queue.removeFirst();
+            String comp2 = (String) queue.removeFirst();
+            String value1 = (String) map.get(comp1);
+            String value2 = (String) map.get(comp2);
+            comparisson += String.format("\t\tint p%d = (%s > %s)?%s:%s;\n", cont, comp1, comp2, value1, value2);
+            comparisson += String.format("\t\tint Q%d = (%s > %s)?%s:%s;\n", cont, comp1, comp2, comp1, comp2);
+            queue.addLast("Q"+cont);
+            map.put("Q"+cont, "p"+cont);
+            cont++;
+        }
+        comparisson += "\t\tP[i] = "+map.get(queue.remove())+";";
+
+        return comparisson;
     }
 }
