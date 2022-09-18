@@ -15,6 +15,8 @@ public class TestFileBuilder {
 
     private static String generateMainFunction(int featureQuantity) {
         String code =  "int main(int argc, char ** argv) {\n" +
+        "openInFile();"+
+        "openOutFile();"+
         "     \n" +
         "    float elapsed_time;\n" +
         "    // set up device\n" +
@@ -38,6 +40,7 @@ public class TestFileBuilder {
         "    h_P = (int * ) malloc(nBytes);\n" +
         "\n" +
         "    %_INICITALIZE_FEATURES_%\n" +
+        "    closeInFile();\n" +
         "\n" +
         "    memset(hostRef, 0, nBytes);\n" +
         "    memset(h_P, 0, nBytes);\n" +
@@ -46,7 +49,11 @@ public class TestFileBuilder {
         "    float %_DECLARING_GLOBAL_MEMORY_%;\n" +
         "    int * d_P;\n" +
         "    %_MALLOC_GLOBAL_MEMORY_%\n" +
-        "    CHECK(cudaMalloc((int ** ) & d_P, nBytes));\n" +
+        "    CHECK(cudaMalloc((int ** ) & d_P, nBytes));\n\n" +
+        "    for(int i = 0; i < nElem; i++){\n" +
+        "        writeOutFile(d_p[i]);\n" +
+        "    }\n" +
+        "    closeOutFile();\n" +
         "\n" +
         "    // transfer data from host to device\n" +
         "    %_TRANSFER_DATA_TO_DEVICE_%" +
@@ -107,7 +114,7 @@ public class TestFileBuilder {
 
         code = code.replace("%_INICITALIZE_FEATURES_%", 
             IntStream.range(0, featureQuantity)
-                .mapToObj( i -> "\tinitialData(h_"+i+", nElem);")
+                .mapToObj( i -> "\treadInFile(h_"+i+", nElem);")
                 .collect(Collectors.joining("\n"))
         );
 
@@ -168,6 +175,50 @@ public class TestFileBuilder {
         "      ip[i] = (float)( rand() & 15 );\n" +
         "  }\n" +
         "  return;\n" +
+        "}\n"+
+        "FILE *inFile;\n" +
+        "FILE *outFile;\n" +
+        "\n" +
+        "void openInFile(){\n" +
+        "    inFile = fopen(\"in/dataset.csv\",\"r\");\n" +
+        "    if (inFile == NULL){\n" +
+        "        printf(\"Erro ao tentar abrir o arquivo!\");\n" +
+        "    }\n" +
+        "}\n" +
+        "\n" +
+        "void closeInFile(){\n" +
+        "    fclose(inFile);\n" +
+        "}\n" +
+        "\n" +
+        "void openOutFile(){\n" +
+        "    outFile = fopen(\"out/out_rf_with_if.csv\",\"a\");\n" +
+        "}\n" +
+        "\n" +
+        "void closeOutFile(){\n" +
+        "    fclose(outFile);\n" +
+        "}\n" +
+        "\n" +
+        "void readInFile(float *ip){ \n" +
+        "    char c;\n" +
+        "    int i = 0, j = 0;\n" +
+        "    char line[20];\n" +
+        "    \n" +
+        "    printf(\"Lendo e exibindo os dados do arquivo \\n\\n\");\n" +
+        "    c = fgetc(inFile);\n" +
+        "    while (c != EOF ||  c != '\\n'){\n" +
+        "        if(c == ','){\n" +
+        "            ip[i] = atof(line);    \n" +
+        "        }else{\n" +
+        "            line[j] = c;\n" +
+        "            j++;\n" +
+        "        }\n" +
+        "        \n" +
+        "        c = fgetc(inFile);\n" +
+        "    }\n" +
+        "}\n" +
+        "\n" +
+        "void writeOutFile(int value){\n" +
+        "    fprintf(outFile, \"%d\\n\", value);\n" +
         "}";
     }
 }

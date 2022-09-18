@@ -21,8 +21,56 @@ void initialData(float *ip, int size){
       ip[i] = (float)( rand() & 15 );
   }
   return;
-}int main(int argc, char ** argv) {
-     
+}
+
+FILE *inFile;
+FILE *outFile;
+
+void openInFile(){
+    inFile = fopen("in/dataset.csv","r");
+    if (inFile == NULL){
+        printf("Erro ao tentar abrir o arquivo!");
+    }
+}
+
+void closeInFile(){
+    fclose(inFile);
+}
+
+void openOutFile(){
+    outFile = fopen("out/out_rf_with_if.csv","a");
+}
+
+void closeOutFile(){
+    fclose(outFile);
+}
+
+void readInFile(float *ip){ 
+    char c;
+    int i = 0, j = 0;
+    char line[20];
+    
+    printf("Lendo e exibindo os dados do arquivo \n\n");
+    c = fgetc(inFile);
+    while (c != EOF ||  c != '\n'){
+        if(c == ','){
+            ip[i] = atof(line);    
+        }else{
+            line[j] = c;
+            j++;
+        }
+        
+        c = fgetc(inFile);
+    }
+}
+
+void writeOutFile(int value){
+    fprintf(outFile, "%d\n", value);
+}
+
+int main(int argc, char ** argv) {
+    openInFile();
+    openOutFile();
     float elapsed_time;
     // set up device
     int dev = 0;
@@ -54,18 +102,20 @@ void initialData(float *ip, int size){
     hostRef = (int * ) malloc(nBytes);
     h_P = (int * ) malloc(nBytes);
 
-    	initialData(h_0, nElem);
-	initialData(h_1, nElem);
-	initialData(h_2, nElem);
-	initialData(h_3, nElem);
-	initialData(h_4, nElem);
-	initialData(h_5, nElem);
-	initialData(h_6, nElem);
-	initialData(h_7, nElem);
-	initialData(h_8, nElem);
-	initialData(h_9, nElem);
-	initialData(h_10, nElem);
+    	readInFile(h_0, nElem);
+	readInFile(h_1, nElem);
+	readInFile(h_2, nElem);
+	readInFile(h_3, nElem);
+	readInFile(h_4, nElem);
+	readInFile(h_5, nElem);
+	readInFile(h_6, nElem);
+	readInFile(h_7, nElem);
+	readInFile(h_8, nElem);
+	readInFile(h_9, nElem);
+	readInFile(h_10, nElem);
 
+    closeInFile();
+    
     memset(hostRef, 0, nBytes);
     memset(h_P, 0, nBytes);
 
@@ -84,6 +134,11 @@ void initialData(float *ip, int size){
     CHECK(cudaMalloc((float ** ) & d_9, nBytes));
     CHECK(cudaMalloc((float ** ) & d_10, nBytes));
     CHECK(cudaMalloc((int ** ) & d_P, nBytes));
+
+    for(int i = 0; i < nElem; i++){
+        writeOutFile(d_p[i]);
+    }
+    closeOutFile();
 
     // transfer data from host to device
         CHECK(cudaMemcpy(d_0, h_0, nBytes, cudaMemcpyHostToDevice));
